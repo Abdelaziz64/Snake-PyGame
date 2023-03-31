@@ -33,6 +33,7 @@ class Food:
 
         canvas.create_oval(x,y,x+ SPACE_SIZE, y + SPACE_SIZE, fill =FOOD_COLOR,tag="food")
 
+
 def next_turn(snake,food):
     x,y = snake.coordinates[0]
     if direction == 'up':
@@ -92,6 +93,7 @@ def change_direction(new_direction):
         if direction != "up":
             direction = new_direction
 
+
     
 
 def check_collisions(snake):
@@ -143,8 +145,64 @@ window.bind('<Right>',lambda event: change_direction('right'))
 window.bind('<Up>',lambda event: change_direction('up'))
 window.bind('<Down>',lambda event: change_direction('down'))
 
-snake = Snake()
-food = Food()
-next_turn(snake,food)
+def exit_program():
+    window.destroy()
+
+
+def set_difficulty_easy():
+    global SPEED
+    SPEED = 200
+    start_game()
+
+
+def set_difficulty_medium():
+    global SPEED
+    SPEED = 100
+    start_game()
+
+
+def set_difficulty_hard():
+    global SPEED
+    SPEED = 50
+    start_game()
+
+    
+
+def start_game():
+    global snake, food, score, direction
+    canvas.delete("all")
+    snake = Snake()
+    food = Food()
+    score = 0
+    direction = 'right'
+    label.config(text="Score:{}".format(score))
+    next_turn(snake, food)
+
+# create a menu bar
+menu_bar = Menu(window)
+
+# create a file menu
+file_menu = Menu(menu_bar, tearoff=0)
+file_menu.add_command(label="Exit", command=exit_program)
+menu_bar.add_cascade(label="File", menu=file_menu)
+
+# create a help menu
+help_menu = Menu(menu_bar, tearoff=0)
+help_menu.add_command(label="About")
+menu_bar.add_cascade(label="Help", menu=help_menu)
+
+#create a difficulty menu
+difficulty_menu = Menu(menu_bar, tearoff=0)
+difficulty_menu.add_command(label="Easy", command=set_difficulty_easy)
+difficulty_menu.add_command(label="Medium", command=set_difficulty_medium)
+difficulty_menu.add_command(label="Hard", command=set_difficulty_hard)
+menu_bar.add_cascade(label="Difficulty", menu=difficulty_menu)
+
+# display the menu bar
+window.config(menu=menu_bar)
+
+
+
+label.config(text='Choose a difficulty')
 
 window.mainloop()
